@@ -1,23 +1,25 @@
-import { useState } from 'react';
+import localforage from "localforage";
+import { useState, useEffect } from "react";
+// import { useState } from "react";
+import { isTodos } from './lib/isTodos';
 
 
-type Todo = {
-  value: string;
-  readonly id: number;
-  checked: boolean;
-  removed:boolean;
-};
-type Filter = 'all'|'checked'|'unchecked'|'removed';
 
 
-// const handleEmpty =()=>{
-//   setTodos((todos)=>todos.filter((todo)=> !todo.removed))
+//データの安全性確保のために別ファイルにTodoとFilterを型定義した。
+// type Todo = {
+//   value: string;
+//   readonly id: number;
+//   checked: boolean;
+//   removed:boolean;
 // };
+// type Filter = 'all'|'checked'|'unchecked'|'removed';
+
 
 export const App = () => {
   const [text, setText] = useState('');
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setfilter] = useState<Filter>('all');
+  const [filter, setFilter] = useState<Filter>('all');
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,39 +27,28 @@ export const App = () => {
   };
 
   const handleFilter = ( filter: Filter) => {
-    setfilter(filter);
-  };
-  const handleEdit = (id: number, value: string) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          //todo.value = value;
-          return { ...todo, value: value };
-        }
-        console.log(todo);
-        return todo;
-      });
-      console.log('===Original todos===');
-      todos.map((todo) => {
-        console.log(`id:${todo.id}, value: ${todo.value}`);
-      });
-      return newTodos;
-    });
+    setFilter(filter);
   };
 
+  //【ジェネリクス(handleEdit handleCheck handleRemove の処理をまとめたもの)】
+  //todosの更新内容取込→更新反映+前のstateを配列として記録
+     const handleTodo = <K extends keyof Todo, V extends Todo[K]>(
+        id: number,
+        key: K,
+        value: V
+    )=>{
+     setTodos((todos) => {
+       const newTodos = todos.map((todo) => {
+         if (todo.id === id) {
+           return { ...todo, [key]: value };
+         }else{
+         return todo;
+          }
+       });
+       return newTodos;
+     });
+   };
 
-  const handleCheck = (id: number, checked: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-            //todo.value = value;
-          return { ...todo, checked };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
     const filteredTodos = todos.filter((todo) => {
     switch(filter){
       case 'all':
@@ -73,23 +64,11 @@ export const App = () => {
     }
   });
 
-  const handleRemove = (id: number, removed: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-            //todo.value = value;
-          return { ...todo, removed };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
 
+//ごみ箱を空にする
   const handleEmpty =()=>{
   setTodos((todos)=>todos.filter((todo)=> !todo.removed))
 };
-
 
 
   const handleSubmit = () => {
@@ -101,17 +80,20 @@ export const App = () => {
       checked: false,
       removed: false,
     };
-    
-
-      
-
-
-
       setTodos((todos) => [newTodo, ...todos]);
       setText('');
     };
 
+//localforage をインポート
+  useEffect(() => {
+    localforage
+      .getItem('todo-20200101')
+      .then((values) => isTodos(values)&&setTodos(values));
+  }, []);
 
+  useEffect(() => {
+    localforage.setItem('todo-20200101', todos);
+  }, [todos]);
     return (
       <div>
         <select defaultValue="all"
@@ -152,24 +134,25 @@ export const App = () => {
         </form>
         )
       )}
+      
         <ul>
-          {/* //{todos.map((todo) => { */}
           {filteredTodos.map((todo) => {
+
             return (
               <li key={todo.id}>
                 <input
                   type="checkbox"
                   disabled={todo.removed}
                   checked={todo.checked}
-                  onChange={() => handleCheck(todo.id,!todo.checked)}
+                  onChange={() => handleTodo(todo.id,'checked',!todo.checked)}
                 />
                 <input
                   type="text"
                   disabled={todo.checked || todo.removed}
                   value={todo.value}
-                  onChange={(e) => handleEdit(todo.id, e.target.value)}
+                  onChange={(e) => handleTodo(todo.id, 'value',e.target.value)}
                 />
-                <button  className='RDbutton'   onClick={()=>handleRemove(todo.id,!todo.removed)}>
+                <button  className='RDbutton'   onClick={()=>handleTodo(todo.id,'removed',!todo.removed)}>
                   {todo.removed ?'復元':'削除'}
                   </button>
               </li>

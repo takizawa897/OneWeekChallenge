@@ -2,32 +2,23 @@ import localforage from "localforage";
 import { useState, useEffect } from "react";
 // import { useState } from "react";
 import { isTodos } from './lib/isTodos';
+import { TodoFilter } from './TodoFilter';
 
-
-
-
-//データの安全性確保のために別ファイルにTodoとFilterを型定義した。
-// type Todo = {
-//   value: string;
-//   readonly id: number;
-//   checked: boolean;
-//   removed:boolean;
-// };
-// type Filter = 'all'|'checked'|'unchecked'|'removed';
 
 
 export const App = () => {
   const [text, setText] = useState('');
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>('all');
-
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
-
   const handleFilter = ( filter: Filter) => {
     setFilter(filter);
+    const FilteredTodos = TodoFilter.TodoFilter(filter: Filter)
+    return todos;
   };
 
   //【ジェネリクス(handleEdit handleCheck handleRemove の処理をまとめたもの)】
@@ -49,37 +40,18 @@ export const App = () => {
      });
    };
 
-    const filteredTodos = todos.filter((todo) => {
-    switch(filter){
-      case 'all':
-        return !todo.removed;
-      case 'checked':
-        return todo.checked && !todo.removed;  
-      case 'unchecked':
-        return !todo.checked && !todo.removed;
-      case 'removed':
-        return todo.removed;
-        default:
-          return todo;
-    }
-  });
+type Filter = 'all'|'checked'|'unchecked'|'removed';
 
 
 //ごみ箱を空にする
-  const handleEmpty =()=>{
-  setTodos((todos)=>todos.filter((todo)=> !todo.removed))
-};
+
 
 
   const handleSubmit = () => {
+
     if (!text) return;
 
-    const newTodo: Todo = {
-      value: text,
-      id: new Date().getTime(),
-      checked: false,
-      removed: false,
-    };
+
       setTodos((todos) => [newTodo, ...todos]);
       setText('');
     };
@@ -125,7 +97,6 @@ export const App = () => {
           onChange={(e) => handleChange(e)}
            />
           <input 
-          className='addbutton'
           type="submit" 
           value="登録"
           // disabled = {filter==='checked'||filter==='removed'}

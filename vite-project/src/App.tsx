@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import AddButton from './components/AddButton';
+import TodoItem from './components/TodoItem';
 
 
-type Todo = {
+export type Todo = {
   value: string;
   readonly id: number;
   checked: boolean;
@@ -140,28 +141,15 @@ export const App = () => {
         )
       )}
         <ul>
-          {/* //{todos.map((todo) => { */}
-          {filteredTodos.map((todo) => {
-            return (
-              <li key={todo.id}>
-                <input
-                  type="checkbox"
-                  disabled={todo.removed}
-                  checked={todo.checked}
-                  onChange={() => handleCheck(todo.id,!todo.checked)}
-                />
-                <input
-                  type="text"
-                  disabled={todo.checked || todo.removed}
-                  value={todo.value}
-                  onChange={(e) => handleEdit(todo.id, e.target.value)}
-                />
-                <button  className='RDbutton'   onClick={()=>handleRemove(todo.id,!todo.removed)}>
-                  {todo.removed ?'復元':'削除'}
-                  </button>
-              </li>
-            );
-          })}
+          {filteredTodos.map((todo) => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              handleEdit={handleEdit}
+              handleCheck={handleCheck}
+              handleRemove={handleRemove}
+            />
+          ))}
         </ul>
       </div>
     );

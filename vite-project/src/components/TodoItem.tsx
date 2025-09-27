@@ -1,7 +1,7 @@
 // Todo アイテムを表示するコンポーネント
 // 処理を持たない純粋な表示コンポーネント
 import React from 'react';
-import { type Todo } from '../App';
+import { type Todo } from '../hooks/useTodo';
 
 // Component に渡したい props の型を定義
 type TodoItemProps = {

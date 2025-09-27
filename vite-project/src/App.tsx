@@ -1,119 +1,24 @@
-import { useState } from 'react';
 import AddButton from './components/AddButton';
 import TodoItem from './components/TodoItem';
 import Filter from './components/Filter';
+import useTodo from './hooks/useTodo';
 
-// Why: 別の Component で使用したいため export する
-export type Todo = {
-  value: string;
-  readonly id: number;
-  checked: boolean;
-  removed:boolean;
-};
-export type Filter = 'all'|'checked'|'unchecked'|'removed';
-
-
-// const handleEmpty =()=>{
-//   setTodos((todos)=>todos.filter((todo)=> !todo.removed))
-// };
 
 export const App = () => {
-  const [text, setText] = useState('');
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setfilter] = useState<Filter>('all');
 
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
-
-  const handleFilter = ( filter: Filter) => {
-    setfilter(filter);
-  };
-  const handleEdit = (id: number, value: string) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          //todo.value = value;
-          return { ...todo, value: value };
-        }
-        console.log(todo);
-        return todo;
-      });
-      console.log('===Original todos===');
-      todos.map((todo) => {
-        console.log(`id:${todo.id}, value: ${todo.value}`);
-      });
-      return newTodos;
-    });
-  };
-
-
-  const handleCheck = (id: number, checked: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-            //todo.value = value;
-          return { ...todo, checked };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
-    const filteredTodos = todos.filter((todo) => {
-    switch(filter){
-      case 'all':
-        return !todo.removed;
-      case 'checked':
-        return todo.checked && !todo.removed;  
-      case 'unchecked':
-        return !todo.checked && !todo.removed;
-      case 'removed':
-        return todo.removed;
-        default:
-          return todo;
-    }
-  });
-
-  const handleRemove = (id: number, removed: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-            //todo.value = value;
-          return { ...todo, removed };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
-
-  const handleEmpty =()=>{
-  setTodos((todos)=>todos.filter((todo)=> !todo.removed))
-};
-
-
-
-  const handleSubmit = () => {
-    if (!text) return;
-
-    const newTodo: Todo = {
-      value: text,
-      id: new Date().getTime(),
-      checked: false,
-      removed: false,
-    };
-    
-
-      
-
-
-
-      setTodos((todos) => [newTodo, ...todos]);
-      setText('');
-    };
-
+    const {
+      text,
+      todos,
+      filter,
+      filteredTodos,
+      handleChange,
+      handleFilter,
+      handleEdit,
+      handleCheck,
+      handleRemove,
+      handleEmpty,
+      handleSubmit
+    } = useTodo();
 
     return (
       <div>

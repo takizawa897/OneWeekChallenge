@@ -1,7 +1,7 @@
 // タスクの状態でフィルタリングするためのコンポーネント
 // 処理を持たない純粋な表示コンポーネント
 import React from 'react';
-import { type Filter } from '../App';
+import { type Filter } from '../hooks/useTodo';
 
 // Component に渡したい props の型を定義
 type FilterProps = {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AddButton from './components/AddButton';
 
 
 type Todo = {
@@ -131,25 +132,11 @@ export const App = () => {
           </button>
         ):(
         filter !=='checked'&&( 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          <input type="text"
-          value={text}  
-          // disabled = {filter==='checked'||filter==='removed'}
-          onChange={(e) => handleChange(e)}
-           />
-          <input 
-          className='addbutton'
-          type="submit" 
-          value="登録"
-          // disabled = {filter==='checked'||filter==='removed'}
-          onSubmit={handleSubmit}
-           />
-        </form>
+          <AddButton
+            task={text}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
+            onAdd={handleSubmit}
+          />
         )
       )}
         <ul>

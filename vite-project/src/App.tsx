@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import AddButton from './components/AddButton';
 import TodoItem from './components/TodoItem';
+import Filter from './components/Filter';
 
-
+// Why: 別の Component で使用したいため export する
 export type Todo = {
   value: string;
   readonly id: number;
   checked: boolean;
   removed:boolean;
 };
-type Filter = 'all'|'checked'|'unchecked'|'removed';
+export type Filter = 'all'|'checked'|'unchecked'|'removed';
 
 
 // const handleEmpty =()=>{
@@ -116,14 +117,11 @@ export const App = () => {
 
     return (
       <div>
-        <select defaultValue="all"
-        onChange={(e)=>handleFilter(e.target.value as Filter)}>
-          <option value="all">すべてのタスク</option>
-          <option value="checked">完了したタスク</option>
-          <option value="unchecked">現在のタスク</option>
-          <option value="removed">ごみ箱</option>
-        </select>
-        
+        <Filter
+          filter={filter}
+          handleFilter={handleFilter}
+        />
+
         {filter === 'removed'?(
           <button 
           onClick={handleEmpty}

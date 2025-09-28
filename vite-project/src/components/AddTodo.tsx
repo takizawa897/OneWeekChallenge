@@ -15,6 +15,8 @@ type AddTodoProps = {
 const AddTodo = (props: AddTodoProps) => {
       return (
           <form
+            // Why: onSubmit にも関数を追加することで、
+            //      Enter キーでの送信も可能にする
             onSubmit={(e) => {
               e.preventDefault();
               props.onAdd();
@@ -30,10 +32,12 @@ const AddTodo = (props: AddTodoProps) => {
             type="submit" 
             value="登録"
             // disabled = {filter==='checked'||filter==='removed'}
-            onSubmit={() => props.onAdd()}
+            // Why: form タグを使う場合、ボタンは submit を呼び出すため、
+            //      実は登録ボタンに処理を書かなくても動く
           />
         </form>
       );
 };
 
+// Why: パフォーマンス改善のため、React.memo でラップしてメモ化する
 export default React.memo(AddTodo);

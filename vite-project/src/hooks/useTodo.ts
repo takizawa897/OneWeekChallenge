@@ -111,10 +111,16 @@ const useTodo = () => {
       removed: false,
     };
 
-      setTodos((todos) => [newTodo, ...todos]);
-      setText('');
-    };
+    // Why: state を直接破壊的に変更しても再レンダーされないため、
+    //      新しい配列を作って setTodos に渡す必要がある。
+    //      関数型アップデートを使うことで、最新の todos をもとに安全に更新できる。
+    setTodos((todos) => [newTodo, ...todos]);
+    setText('');
+  };
 
+  // Why: useState の set を直接返すのではなく、ラップした関数を返すことで、
+  //      将来的にロジックを追加したり、副作用を管理したりしやすくなる。
+  //     （カプセル化）
     return {
         text,
         todos,

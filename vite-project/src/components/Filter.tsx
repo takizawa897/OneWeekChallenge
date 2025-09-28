@@ -14,6 +14,7 @@ type FilterProps = {
 const Filter = (props: FilterProps) => {
   return (
     <select defaultValue="all"
+      // Why: e.target.value は string 型なので、Filter 型にキャストする
       onChange={(e)=>props.handleFilter(e.target.value as Filter)}>
       <option value="all">すべてのタスク</option>
       <option value="checked">完了したタスク</option>
@@ -23,4 +24,5 @@ const Filter = (props: FilterProps) => {
   );
 }
 
+// Why: パフォーマンス改善のため、React.memo でラップしてメモ化する
 export default React.memo(Filter);

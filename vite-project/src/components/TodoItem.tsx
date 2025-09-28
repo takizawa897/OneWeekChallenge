@@ -37,4 +37,5 @@ const TodoItem = (props: TodoItemProps) => {
     );
 }
 
+// Why: パフォーマンス改善のため、React.memo でラップしてメモ化する
 export default React.memo(TodoItem);

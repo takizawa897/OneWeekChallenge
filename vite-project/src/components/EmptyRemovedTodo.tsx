@@ -15,6 +15,7 @@ const EmptyRemovedTodo = (props: EmptyRemovedTodoProps) => {
         return (
           <button 
           onClick={props.handleEmpty}
+          //   Why: ゴミ箱が空のときはボタンを無効化する
           disabled={props.removedTodos.length === 0}
           >
           ごみ箱を空にする
@@ -22,4 +23,5 @@ const EmptyRemovedTodo = (props: EmptyRemovedTodoProps) => {
     );
 };
 
+// Why: パフォーマンス改善のため、React.memo でラップしてメモ化する
 export default React.memo(EmptyRemovedTodo);

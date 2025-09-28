@@ -1,4 +1,4 @@
-import AddButton from './components/AddButton';
+import AddTodo from './components/AddTodo';
 import TodoItem from './components/TodoItem';
 import Filter from './components/Filter';
 import useTodo from './hooks/useTodo';
@@ -36,7 +36,7 @@ export const App = () => {
           </button>
         ):(
         filter !=='checked'&&( 
-          <AddButton
+          <AddTodo
             task={text}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
             onAdd={handleSubmit}

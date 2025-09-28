@@ -3,7 +3,7 @@
 import React from 'react';
 
 // Component に渡したい props の型を定義
-type AddButtonProps = {
+type AddTodoProps = {
     // タスクの内容
     task: string
     // タスクの内容が変更されたときに呼ばれる関数
@@ -12,7 +12,7 @@ type AddButtonProps = {
     onAdd: () => void;
 }
 
-const AddButton = (props: AddButtonProps) => {
+const AddTodo = (props: AddTodoProps) => {
       return (
           <form
             onSubmit={(e) => {
@@ -26,7 +26,7 @@ const AddButton = (props: AddButtonProps) => {
             onChange={(e) => props.onChange(e)}
            />
           <input 
-            className='addbutton'
+            className='addTodo'
             type="submit" 
             value="登録"
             // disabled = {filter==='checked'||filter==='removed'}
@@ -36,4 +36,4 @@ const AddButton = (props: AddButtonProps) => {
       );
 };
 
-export default React.memo(AddButton);
+export default React.memo(AddTodo);

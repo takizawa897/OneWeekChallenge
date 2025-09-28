@@ -1,6 +1,7 @@
 // Todo の内容を管理するカスタムフック
 import { useState } from 'react';
 
+// Why: Todo の操作はこのカスタムフックの管理下にあるため、型定義もここに置いて完結させる
 // Why: 別の Component で使用したいため export する
 export type Todo = {
   value: string;
@@ -93,9 +94,11 @@ const useTodo = () => {
     });
   };
 
-  const handleEmpty =()=>{
-  setTodos((todos)=>todos.filter((todo)=> !todo.removed))
-};
+  // ごみ箱を空にする関数
+  // 削除済以外を取り出して上書きすることで、ごみ箱を空にする
+  const handleEmpty = () => {
+    setTodos((todos) => todos.filter((todo) => !todo.removed));
+  };
 
   // Todo を追加する関数 
   const handleSubmit = () => {

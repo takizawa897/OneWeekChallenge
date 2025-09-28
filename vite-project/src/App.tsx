@@ -2,7 +2,7 @@ import AddTodo from './components/AddTodo';
 import TodoItem from './components/TodoItem';
 import Filter from './components/Filter';
 import useTodo from './hooks/useTodo';
-
+import EmptyRemovedTodo from './components/EmptyRemovedTodo';
 
 export const App = () => {
 
@@ -28,12 +28,10 @@ export const App = () => {
         />
 
         {filter === 'removed'?(
-          <button 
-          onClick={handleEmpty}
-          disabled={todos.filter((todo)=>todo.removed).length === 0}
-          >
-          ごみ箱を空にする
-          </button>
+          <EmptyRemovedTodo
+            removedTodos={todos.filter((todo) => todo.removed)}
+            handleEmpty={handleEmpty}
+          />
         ):(
         filter !=='checked'&&( 
           <AddTodo

@@ -1,8 +1,8 @@
 import AddTodo from './components/AddTodo';
-import TodoItem from './components/TodoItem';
 import Filter from './components/Filter';
 import useTodo from './hooks/useTodo';
 import EmptyRemovedTodo from './components/EmptyRemovedTodo';
+import TodoList from './components/TodoList';
 
 export const App = () => {
 
@@ -41,19 +41,15 @@ export const App = () => {
           />
         )
       )}
-        <ul>
-          {filteredTodos.map((todo) => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              handleEdit={handleEdit}
-              handleCheck={handleCheck}
-              handleRemove={handleRemove}
-            />
-          ))}
-        </ul>
+      {/* Why:「Filter されているかどうか」について知らない状態のコンポーネントとして
+               切り出すことで、よりシンプルにできる
+      */}
+      <TodoList
+        todos={filteredTodos}
+        handleEdit={handleEdit}
+        handleCheck={handleCheck}
+        handleRemove={handleRemove}
+      />
       </div>
     );
   };
-
-
